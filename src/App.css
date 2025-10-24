@@ -41,3 +41,246 @@
   color: #888;
 }
 
+/* === RESET E BASE === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background: #f4f6f5;
+  color: #1f1f1f;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* === LAYOUT PRINCIPAL === */
+.container {
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 2rem;
+}
+
+/* Cabeçalhos */
+h1, h2, h3 {
+  font-weight: 700;
+  color: #14532d; /* verde escuro */
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+h1 {
+  font-size: 2.2rem;
+}
+
+/* === LINKS === */
+a {
+  color: #16a34a; /* verde principal */
+  text-decoration: none;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+a:hover {
+  color: #15803d;
+  text-shadow: 0 0 4px rgba(22, 163, 74, 0.3);
+}
+
+/* === LISTA DE POSTS === */
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.post-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-left 0.2s ease;
+  border-left: 4px solid transparent;
+}
+
+.post-item:hover {
+  transform: translateY(-4px);
+  border-left: 4px solid #16a34a;
+  box-shadow: 0 6px 18px rgba(22, 163, 74, 0.15);
+}
+
+.post-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #14532d;
+}
+
+.post-author {
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.post-author a {
+  font-weight: 500;
+}
+
+/* === DETALHES DO POST === */
+.post-body {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-top: 1.2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  line-height: 1.7;
+  border-left: 4px solid #16a34a;
+}
+
+/* === COMENTÁRIOS === */
+.comments-list {
+  margin-top: 1rem;
+  list-style: none;
+}
+
+.comment-item {
+  background: #f9faf9;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.8rem;
+  border-left: 4px solid #16a34a;
+}
+
+.comment-item strong {
+  display: block;
+  color: #14532d;
+  margin-bottom: 0.3rem;
+}
+
+/* === FORMULÁRIO DE COMENTÁRIO === */
+form {
+  max-width: 1200px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+form label {
+  display: block;
+  margin-bottom: 1rem;
+  color: #14532d;
+  font-weight: 500;
+}
+
+form input,
+form textarea {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.7rem;
+  margin-top: 0.3rem;
+  font-size: 1rem;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+form input:focus,
+form textarea:focus {
+  outline: none;
+  border-color: #16a34a;
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+}
+
+form button {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+form button:hover {
+  background: #15803d;
+  transform: scale(1.02);
+}
+
+/* === SEPARADORES === */
+hr {
+  border: none;
+  height: 1px;
+  background: #e5e7eb;
+  margin: 2rem 0;
+}
+
+/* === MODO ESCURO === */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #111;
+    color: #e8e8e8;
+  }
+
+  .post-item,
+  .post-body,
+  form {
+    background: #1a1a1a;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+  }
+
+  h1, h2, h3 {
+    color: #86efac; /* verde claro */
+  }
+
+  a {
+    color: #4ade80;
+  }
+
+  .post-title {
+    color: #86efac;
+  }
+
+  .post-author {
+    color: #bbb;
+  }
+
+  form label {
+    color: #a7f3d0;
+  }
+
+  form input,
+  form textarea {
+    background: #2b2b2b;
+    color: #eee;
+    border-color: #3a3a3a;
+  }
+
+  form input:focus,
+  form textarea:focus {
+    border-color: #4ade80;
+    box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
+  }
+
+  form button {
+    background: #22c55e;
+  }
+
+  form button:hover {
+    background: #16a34a;
+  }
+}
+
+/* === RESPONSIVIDADE === */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .post-title {
+    font-size: 1.1rem;
+  }
+}

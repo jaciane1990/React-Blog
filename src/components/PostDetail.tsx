@@ -23,81 +23,53 @@ interface Comment {
   approved: boolean
 }
 
-export default function PostDetail() {
+interface PostDetailProps {
+  posts: Post[]
+  users: User[]
+}
+
+export default function PostDetail({ posts, users }: PostDetailProps) {
   const { id } = useParams<{ id: string }>()
-  const [post, setPost] = useState<Post | null>(null)
-  const [author, setAuthor] = useState<User | null>(null)
   const [comments, setComments] = useState<Comment[]>([])
   const [loading, setLoading] = useState(true)
-
-  // Campos do novo comentário
+  const [submitting, setSubmitting] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [body, setBody] = useState('')
-  const [submitting, setSubmitting] = useState(false)
+
+  const post = posts.find(p => p.id === Number(id))
+  const author = users.find(u => u.id === post?.userId)
 
   useEffect(() => {
     if (!id) return
 
-    fetch(`https://jsonplaceholder.typicode.com/posts/${id}`)
+    fetch(`https://jsonplaceholder.typicode.com/posts/${id}/comments`)
       .then(res => res.json())
-      .then((postData: Post) => {
-        setPost(postData)
-
-        fetch(`https://jsonplaceholder.typicode.com/users/${postData.userId}`)
-          .then(res => res.json())
-          .then((userData: User) => setAuthor(userData))
-          .catch(err => console.error('Erro ao buscar autor:', err))
-
-        fetch(`https://jsonplaceholder.typicode.com/posts/${id}/comments`)
-          .then(res => res.json())
-          .then((commentsData: Omit<Comment, 'approved'>[]) => {
-            // Simular que todos os comentários da API estão aprovados
-            const approvedComments = commentsData.map(comment => ({
-              ...comment,
-              approved: true
-            }))
-            setComments(approvedComments)
-          })
-          .catch(err => console.error('Erro ao buscar comentários:', err))
-
-        setLoading(false)
+      .then((commentsData: Omit<Comment, 'approved'>[]) => {
+        const approvedComments = commentsData.map(comment => ({
+          ...comment,
+          approved: true
+        }))
+        setComments(approvedComments)
       })
-      .catch(err => {
-        console.error('Erro ao buscar post:', err)
-        setLoading(false)
-      })
+      .catch(err => console.error('Erro ao buscar comentários:', err))
+      .finally(() => setLoading(false))
   }, [id])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     if (!name || !email || !body) return
 
-    const newComment: Omit<Comment, 'id' | 'approved'> = {
-      name,
-      email,
-      body
-    }
-
     setSubmitting(true)
 
-    fetch(`https://jsonplaceholder.typicode.com/comments`, {
+    fetch('https://jsonplaceholder.typicode.com/comments', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ...newComment,
-        postId: id
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, body, postId: id })
     })
       .then(res => res.json())
-      .then((data: Omit<Comment, 'approved'>) => {
-        // Adicionar localmente o novo comentário com approved = true
-        setComments(prev => [
-          ...prev,
-          { ...data, id: Date.now(), approved: true }
-        ])
+      .then(data => {
+        setComments(prev => [...prev, { ...data, id: Date.now(), approved: true }])
         setName('')
         setEmail('')
         setBody('')
@@ -113,7 +85,8 @@ export default function PostDetail() {
       <h2>{post.title}</h2>
       <p className="post-author">
         <em>
-          por {author ? (
+          por{' '}
+          {author ? (
             <Link to={`/author/${author.id}`}>{author.name}</Link>
           ) : (
             'Autor desconhecido'
@@ -132,7 +105,7 @@ export default function PostDetail() {
           {comments
             .filter(comment => comment.approved)
             .map(comment => (
-              <li key={comment.id} className="comment-item">
+              <li key={comment.id}>
                 <strong>{comment.name}</strong> (<em>{comment.email}</em>)
                 <p>{comment.body}</p>
               </li>
@@ -147,34 +120,19 @@ export default function PostDetail() {
         <div>
           <label>
             Nome:<br />
-            <input
-              type="text"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              required
-            />
+            <input type="text" value={name} onChange={e => setName(e.target.value)} required />
           </label>
         </div>
         <div>
           <label>
             Email:<br />
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-            />
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
           </label>
         </div>
         <div>
           <label>
             Comentário:<br />
-            <textarea
-              value={body}
-              onChange={e => setBody(e.target.value)}
-              required
-              rows={4}
-            ></textarea>
+            <textarea value={body} onChange={e => setBody(e.target.value)} required rows={4}></textarea>
           </label>
         </div>
         <button type="submit" disabled={submitting}>

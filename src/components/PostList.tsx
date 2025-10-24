@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+// src/components/PostList.tsx
 import { Link } from 'react-router-dom'
 import './PostList.css'
 
@@ -13,26 +13,12 @@ interface User {
   name: string
 }
 
-export default function PostList() {
-  const [posts, setPosts] = useState<Post[]>([])
-  const [users, setUsers] = useState<User[]>([])
-  const [loading, setLoading] = useState(true)
+interface PostListProps {
+  posts: Post[]
+  users: User[]
+}
 
-  useEffect(() => {
-    Promise.all([
-      fetch('https://jsonplaceholder.typicode.com/posts').then(res => res.json()),
-      fetch('https://jsonplaceholder.typicode.com/users').then(res => res.json())
-    ])
-      .then(([postsData, usersData]) => {
-        setPosts(postsData)
-        setUsers(usersData)
-      })
-      .catch(err => console.error(err))
-      .finally(() => setLoading(false))
-  }, [])
-
-  if (loading) return <p className="container">Carregando posts...</p>
-
+export default function PostList({ posts, users }: PostListProps) {
   const getAuthorName = (userId: number) => {
     const user = users.find(u => u.id === userId)
     return user ? user.name : 'Autor desconhecido'
